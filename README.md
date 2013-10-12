@@ -15,9 +15,9 @@ Installation
 
 **PHP**
 
-*PHP 5.3.6+ Comes with OS X 10.8+ - For 10.7 or earlier version of OS X you will need to use macports or other options to install a compatable version of php.
-*For windows download the php installer here: http://windows.php.net/downloads/releases/php-5.3.27-Win32-VC9-x86.msi (if you do not already have php installed).
-*For linux, use your distribution package manager or install from source (if you do not already have php installed, or need to upgrade to a compatable version of php).
+- PHP 5.3.6+ Comes with OS X 10.8+ - For 10.7 or earlier version of OS X you will need to use macports or other options to install a compatable version of php.
+- For windows download the php installer here: http://windows.php.net/downloads/releases/php-5.3.27-Win32-VC9-x86.msi (if you do not already have php installed).
+- For linux, use your distribution package manager or install from source (if you do not already have php installed, or need to upgrade to a compatable version of php).
 
 **TuneKSP**
 
