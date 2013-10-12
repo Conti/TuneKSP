@@ -13,27 +13,23 @@ Requirements
 Installation
 ----------------
 
--PHP
+**PHP**
 
-PHP 5.3.6+ Comes with OS X 10.8+ - For 10.7 or earlier version of OS X you will need to use macports or other options to install a compatable version of php.
-For windows download the php installer here: http://windows.php.net/downloads/releases/php-5.3.27-Win32-VC9-x86.msi (if you do not already have php installed).
-For linux, use your distribution package manager or install from source (if you do not already have php installed, or need to upgrade to a compatable version of php).
+*PHP 5.3.6+ Comes with OS X 10.8+ - For 10.7 or earlier version of OS X you will need to use macports or other options to install a compatable version of php.
+*For windows download the php installer here: http://windows.php.net/downloads/releases/php-5.3.27-Win32-VC9-x86.msi (if you do not already have php installed).
+*For linux, use your distribution package manager or install from source (if you do not already have php installed, or need to upgrade to a compatable version of php).
 
--TuneKSP
+**TuneKSP**
 
-Copy tuneksp.php to your KSP root directory. (The directory where the KSP application, GameData and saves directories are located)
-
-On my system this is ~/KSP/tuneksp.php
-
-Advanced users: Optionally, if you feel comfortable editing the variables at the top of the php file, you may define your own absolute or relative paths to GameData and GameData/UniverseReplacer.
+Copy tuneksp.php to your KSP root directory. (The directory where the KSP application, GameData and saves directories are all located)
 
 
 Usage
 ----------------
-Open a terminal (or cmd on windows) and browse to your KSP root directory.
-On my system this is `cd ~/KSP`
-On my test windows system this is `cd "C:\Program Files\KSP"`
-Type: `php tuneksp.php -h` and press enter, this will show you the following usage information:
+*Open a terminal (or cmd in windows) and browse to your KSP root directory.
+*On my osx system this is `cd ~/KSP`
+*On my test windows system this is `cd "C:\Program Files\KSP"`
+*Type: `php tuneksp.php -h` and press enter, this will show you the following usage information:
 
 ```
 $ php tuneksp.php -h
@@ -53,7 +49,7 @@ Usage:
 -h  --help             : Display this message.
 ```
 
-Note: The universe replacer functionality will only appear if the script detects ./GameData/UniverseReplacer
+Note: The universe replacer functionality will only appear if the script detects `~/KSP/GameData/UniverseReplacer`
 
 For most people all that you will need to use is the -b (--tune-building) flag for when you want to create new .craft files in the VAB/SPH and the -m (--tune-mission) flag for when you want to fly a mission. 
 
@@ -67,7 +63,7 @@ This is a script I wrote to help manage the rather large number of mods I have i
 
 How It Works
 ----------------
-The script will recursively scan your GameData directory and compile a list of all parts and assets. It will then extract part information from your saved .craft files and generate used/unused parts/assets arrays. It will then disable all unused part cfg's, meshes, and texture assets for the unused parts. Additionally it will notify you of any missing parts (parts which are defined in your .craft files but do not exist in GameData). It does the same for unused IVA's but when disabling all IVA views it will comment out any IVA definitions within command module cfg files, or (optionally) redefine a single IVA for all command module cfg files which have an IVA definition. 
+The script will recursively scan your GameData directory and compile a list of all parts and assets. It will then extract part information from your saved .craft files and generate used/unused parts/assets arrays. It will then disable all unused part cfg's, meshes, and texture assets for the unused parts. Additionally it will notify you of any missing parts (parts which are defined in your .craft files but do not exist in GameData). It does the same for unused IVA's but when disabling all IVA views it will comment out any IVA definitions within command module cfg files, or (optionally) redefine a single IVA for all command module cfg files which have an IVA definition.
 
 
 Todo
