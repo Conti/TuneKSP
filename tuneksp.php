@@ -1,6 +1,6 @@
 <?php
 /*
-TuneKSP 0.01 - https://github.com/Conti/TuneKSP
+TuneKSP 0.02 - https://github.com/Conti/TuneKSP
 
 Copyright © 2013 Conti - ( http://sojugarden.com | https://github.com/Conti ). 
 All rights reserved.
@@ -15,7 +15,14 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-$version = "0.01";
+if (DIRECTORY_SEPARATOR == '/') {
+    $ostype = "NIX";
+}
+else if (DIRECTORY_SEPARATOR == '\\') {
+	$ostype = "WIN";
+}
+
+$version = "0.02";
 
 //GameData Path
 $GDPath = "./GameData";
@@ -887,8 +894,15 @@ if($disablealliva == true){
 			echo "[$opt] = $iname\n";
 		}
 		$i = count($iChoices);
-		echo "[$i] = Do not use any IVA views.\n";	
-		$iEnabled = readline("\nEnter the numeric for the IVA you wish to use: ");
+		echo "[$i] = Do not use any IVA views.\n";
+		if($ostype == "WIN"){
+			echo "\nEnter the numeric for the IVA you wish to use: ";
+			$iEnabled = stream_get_line(STDIN, 1024, PHP_EOL);
+		}
+		else {
+			$iEnabled = readline("\nEnter the numeric for the IVA you wish to use: ");
+		}
+		
 		if($iChoices[$iEnabled]){
 			$iEnabled = $iChoices[$iEnabled];
 			$validOpt = true;
@@ -1083,7 +1097,13 @@ if($urexists == true){
 			echo "\n[a] = Enable All\n";
 			echo "[d] = Disable All\n";
 			echo "[s] = Save Configuration\n";
-			$iEnabled = readline("\nEnter the numeric for the texture group you wish to enable/disable or a/d/s: ");
+			if($ostype == "WIN"){
+				echo "\nEnter the numeric for the texture group you wish to enable/disable or a/d/s: ";
+				$iEnabled = stream_get_line(STDIN, 1024, PHP_EOL);
+			}
+			else {
+				$iEnabled = readline("\nEnter the numeric for the texture group you wish to enable/disable or a/d/s: ");
+			}
 			if($iChoices[$iEnabled]){
 				if($enableList[$iChoices[$iEnabled]]){
 					unset($enableList[$iChoices[$iEnabled]]);

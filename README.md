@@ -1,27 +1,42 @@
-TuneKSP 0.01
+TuneKSP 0.02
 =====================
 https://github.com/Conti/TuneKSP
+
 
 Requirements
 ----------------
 - PHP CLI 5.3.6 or later
+- OSX/Win/Linux
+- KSP 0.21+
+
 
 Installation
 ----------------
-Copy tuneksp.php to your KSP root directory. (The directory where GameData and saves directories are located)
-On my system I have ~/KSP/GameData and ~/KSP/saves - so tuneksp.php is located at ~/KSP/tuneksp.php
+
+*PHP*
+PHP 5.3.6+ Comes with OS X 10.8+ - For 10.7 or earlier version of OS X you will need to use macports or other options to install a compatable version of php.
+For windows download the php installer here: http://windows.php.net/downloads/releases/php-5.3.27-Win32-VC9-x86.msi (if you do not already have php installed).
+For linux, use your distribution package manager or install from source (if you do not already have php installed, or need to upgrade to a compatable version of php).
+
+*TuneKSP*
+Copy tuneksp.php to your KSP root directory. (The directory where the KSP application, GameData and saves directories are located)
+
+On my system this is ~/KSP/tuneksp.php
 
 Advanced users: Optionally, if you feel comfortable editing the variables at the top of the php file, you may define your own absolute or relative paths to GameData and GameData/UniverseReplacer.
 
-Useage
+
+Usage
 ----------------
-Open a terminal and browse to your KSP root directory. On my system this is cd ~/KSP
-Type: "php tuneksp.php -h" (without the quotes) and press enter, this will show you the following usage information:
+Open a terminal (or cmd on windows) and browse to your KSP root directory.
+On my system this is `cd ~/KSP`
+On my test windows system this is `cd "C:\Program Files\KSP"`
+Type: `php tuneksp.php -h` and press enter, this will show you the following usage information:
 
 ```
 $ php tuneksp.php -h
 
-TuneKSP version 0.01
+TuneKSP version 0.02
 
 Usage:
 -b  --tune-building    : Tune for VAB/SPH, Disable all IVA, Enable all Parts, Disable UR
@@ -36,21 +51,21 @@ Usage:
 -h  --help             : Display this message.
 ```
 
-Note: The universe replacer help and functionality will only appear if the script detects ./GameData/UniverseReplacer/
+Note: The universe replacer functionality will only appear if the script detects ./GameData/UniverseReplacer
 
-For most people all that you will need to use is the -b (--tune-building) flag for when you want to create new .craft files in the VAB/SPH and the -m (--tune-mission) flag for when you want to fly a mission. These are the only options I use personally but the other options are provided for people who may want to do something like tuneksp.php -ut -a (which would enable all parts, but disable all IVA and tune universe replacer). These kinds of configurations may be desirable for some people who want to build and run test flights with some eye candy enabled still.
+For most people all that you will need to use is the -b (--tune-building) flag for when you want to create new .craft files in the VAB/SPH and the -m (--tune-mission) flag for when you want to fly a mission. 
+
+These are the only options I use personally but the other options are provided for people who may want to do something like `tuneksp.php -ut -a` (which would enable all parts, but disable all IVA and tune universe replacer). These kinds of configurations may be desirable for some people who want to build and run test flights with some eye candy enabled still.
 
 
 About
 ----------------
-This is a php script I wrote to help manage the rather large number of mods I have installed at any given time. It will function with most KSP mods which work in KSP v0.21+ and are installed to the KSP/GameData directory. It may not function properly with some older mods or mods which use uncommon configurations which will require mod-specific code to be added. There is mod-specific code for two such mods currently: UniverseReplacer4 and KAS4.2. 
+This is a script I wrote to help manage the rather large number of mods I have installed at any given time. It is compatible with most KSP mods which work in KSP v0.21+ and are installed to the KSP/GameData directory. It may not function properly with some older mods or mods which use uncommon configurations, mods with uncommon configurations will require mod-specific code to be added. There is mod-specific code for two such mods currently: UniverseReplacer4 and KAS4.2.
 
-*PLEASE NOTE:* This was written on OSX 10.9, and it should work on OSX 10.8 without any modifications to the OS. OSX 10.7 would need a newer version of php installed. It should work on linux so long as the minimum php version is met, but I do not believe it will work on windows (even with php installed) without modifications. If someone would like to contribute these modifications and send me a pull request I would appreciate it, otherwise I may setup a windows dev environment at some point to do so, my time is limited however and I do not normally do development on windows systems.
 
 How It Works
 ----------------
-It will recursively scan your GameData directory and compile a list of all parts and assets. It will then extract part information from your saved .craft files and generate used/unused parts/assets arrays. It will then disable all unused part cfg's, meshes, and texture assets for the unused parts. Additionally it will notify you of any missing parts (parts which are defined in your .craft files but do not exist in GameData). It does the same for unused IVA's but when disabling all IVA views it will comment out any IVA definitions within command module cfg files, or (optionally) redefine a single IVA for all command module cfg files which have an IVA definition. 
-
+The script will recursively scan your GameData directory and compile a list of all parts and assets. It will then extract part information from your saved .craft files and generate used/unused parts/assets arrays. It will then disable all unused part cfg's, meshes, and texture assets for the unused parts. Additionally it will notify you of any missing parts (parts which are defined in your .craft files but do not exist in GameData). It does the same for unused IVA's but when disabling all IVA views it will comment out any IVA definitions within command module cfg files, or (optionally) redefine a single IVA for all command module cfg files which have an IVA definition. 
 
 
 Todo
