@@ -85,7 +85,7 @@ function getIvaName($fname, $key){
 
 }
 
-function getParts($fname){
+function getCraftParts($fname){
 	$array = array();
 	$fp = fopen($fname, "r");
 
@@ -101,6 +101,36 @@ function getParts($fname){
 	}
 	fclose($fp);
 	return $array;
+}
+
+function getPersistentParts($fname){
+	$array = array();
+	$fp = fopen($fname, "r");
+	$level = 0;
+	$partLevel = 0;
+	while (!feof($fp)) {
+		$line = fgets($fp);
+		if(strstr($line, "PART")){
+			$partLevel = 1;
+			$level = 0;
+		}
+		if(strstr($line, "{")) {
+			$level++;
+		}
+		if(strstr($line, "}")) {
+			$level--;
+		}
+		if ($line && $level == 1 && $partLevel == 1 && strstr($line, "name =")) {
+			$chunk = explode("=", $line);
+			$chunk = trim($chunk[1]);
+			$chunk = str_replace(".", "_", $chunk);
+			$array[] = $chunk;
+			$partLevel = 0;
+		}
+	}
+	fclose($fp);
+	return $array;
+
 }
 
 function getKASContainerParts($fname){
@@ -711,7 +741,7 @@ $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), 
 foreach($objects as $name => $object){
 	if($object->getExtension() == "craft"){
 		$fname = $object->getPathname();
-		$craftParts = array_merge_recursive($craftParts, getParts($fname));
+		$craftParts = array_merge_recursive($craftParts, getCraftParts($fname));
 		// Get parts which are in KAS4+ part containers
 		$craftParts = array_merge_recursive($craftParts, getKASContainerParts($fname));
 		//for debugging as needed uncomment this //print_r(getKASContainerParts($fname));
@@ -723,25 +753,61 @@ $timesUsed = array_count_values($craftParts);
 
 $craftParts = array_keys(array_count_values($craftParts));
 
-
-
 //compare craftParts and partNames to determine if any parts are missing
 if($verbose == true){
 	echo "Compare craftParts and partNames to determine if any parts are missing...\n";
 }
-$missingParts = array();
+$missingCraftParts = array();
 foreach($craftParts as $key => $value){
 	if(!$partNames[$value]){
-		array_push($missingParts, $value);
+		array_push($missingCraftParts, $value);
 	}
 	
 }
-$mParts = count($missingParts);
 
 if($debug == true){
-	echo "missingParts:(".count($missingParts).")\n";
-	print_r($missingParts);
+	echo "missingCraftParts:(".count($missingCraftParts).")\n";
+	print_r($missingCraftParts);
 }
+
+
+//Compile a list of all parts currently used in persistent files
+if($verbose == true){
+	echo "Compile a list of all parts currently used in persistent files...\n";
+}
+$persistentParts = array();
+$path = realpath('./saves');
+$tCraft = 0;
+$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
+foreach($objects as $name => $object){
+	if($object->getExtension() == "sfs"){
+		$fname = $object->getPathname();
+		$persistentParts = array_merge_recursive($persistentParts, getPersistentParts($fname));
+		// Get parts which are in KAS4+ part containers
+		$persistentParts = array_merge_recursive($persistentParts, getKASContainerParts($fname));
+		//for debugging as needed uncomment this //print_r(getKASContainerParts($fname));
+	}
+}
+
+$persistentParts = array_keys(array_count_values($persistentParts));
+
+//compare persistentParts and partNames to determine if any parts are missing
+if($verbose == true){
+	echo "Compare persistentParts and partNames to determine if any parts are missing...\n";
+}
+$missingPersistentParts = array();
+foreach($persistentParts as $key => $value){
+	if(!$partNames[$value]){
+		array_push($missingPersistentParts, $value);
+	}
+	
+}
+
+if($debug == true){
+	echo "missingPersistentParts:(".count($missingPersistentParts).")\n";
+	print_r($missingPersistentParts);
+}
+
 
 //split used parts from partNames array and place into unusedParts/usedParts arrays
 if($verbose == true){
@@ -750,6 +816,12 @@ if($verbose == true){
 $usedParts = array();
 $unusedParts = $partNames;
 foreach($craftParts as $key => $value){
+	if($unusedParts[$value]){
+		$usedParts[$value] = $unusedParts[$value];
+		unset($unusedParts[$value]);
+	}
+}
+foreach($persistentParts as $key => $value){
 	if($unusedParts[$value]){
 		$usedParts[$value] = $unusedParts[$value];
 		unset($unusedParts[$value]);
@@ -1242,12 +1314,16 @@ if($debug == true){
 	
 	echo "craftParts:(".count($craftParts).")\n";
 	print_r($craftParts);
+	
+	echo "persistentParts:(".count($persistentParts).")\n";
+	print_r($persistentParts);
 
 	echo "timesUsed:(".count($timesUsed).")\n";
 	print_r($timesUsed);
 }
 
-$missing = count($missingParts);
+$missingCP = count($missingCraftParts);
+$missingPP = count($missingPersistentParts);
 $tIVAParts = count($ivaNames);
 
 if($verbose == true){
@@ -1262,8 +1338,11 @@ if($verbose == true){
 echo "----------------------------------------\n";
 echo "Total Parts : $totalParts\n";
 echo "Active Parts: $activeParts\n";
-if($missing > 0){
-	echo "Missing Parts: $mParts\n";
+if($missingCP > 0){
+	echo "Missing Craft Parts: $missingCP\n";
+}
+if($missingPP > 0){
+	echo "Missing Persistent Parts: $missingPP\n";
 }
 echo "Total IVA : $totalIva\n";
 echo "Active IVA : $activeIva\n";
@@ -1277,11 +1356,21 @@ echo "Total Audio Size : $aSize MB\n";
 echo "----------------------------------------\n";
 
 
-if($missing > 0){
-	asort($missingParts);
-	echo "WARNING: The following parts are missing\n";
+if($missingCP > 0){
+	asort($missingCraftParts);
+	echo "WARNING: Missing Craft Parts\n";
 	echo "----------------------------------------\n";
-	foreach($missingParts as $key => $name){
+	foreach($missingCraftParts as $key => $name){
+		echo "$name\n";
+	}
+	echo "----------------------------------------\n";
+}
+
+if($missingPP > 0){
+	asort($missingPersistentParts);
+	echo "WARNING: Missing Persistent Parts\n";
+	echo "----------------------------------------\n";
+	foreach($missingPersistentParts as $key => $name){
 		echo "$name\n";
 	}
 	echo "----------------------------------------\n";
