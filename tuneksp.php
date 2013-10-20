@@ -34,6 +34,9 @@ $GDPath = "./GameData";
 $URPath = "./GameData/UniverseReplacer";
 $URCfg = "./tuneksp-ur.cfg";
 
+//SavePath (TEMPORARY)
+$savePath = "./saves";
+
 // Functions
 function getPartName($fname, $key){
 	$array = array();
@@ -735,7 +738,7 @@ if($verbose == true){
 	echo "Compile a list of all parts currently used in craft files...\n";
 }
 $craftParts = array();
-$path = realpath('./saves');
+$path = realpath($savePath);
 $tCraft = 0;
 $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
 foreach($objects as $name => $object){
@@ -776,8 +779,7 @@ if($verbose == true){
 	echo "Compile a list of all parts currently used in persistent files...\n";
 }
 $persistentParts = array();
-$path = realpath('./saves');
-$tCraft = 0;
+$path = realpath($savePath);
 $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
 foreach($objects as $name => $object){
 	if($object->getExtension() == "sfs"){
