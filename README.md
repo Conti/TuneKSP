@@ -7,7 +7,7 @@ https://github.com/Conti/TuneKSP
 Requirements
 ----------------
 
-- PHP CLI 5.3.6 or later
+- PHP 5.3.6 or later
 - OSX/Win/Linux
 - KSP 0.21+
 
@@ -74,5 +74,5 @@ The script will recursively scan your GameData directory and compile a list of a
 Todo
 ----------------
 
-- Add code to parse persistance files to prevent disabling parts which are used but are not currently defined in any .craft files, and to warn of any missing parts which are not in .craft files
 - Add option to parse craft/persistance data from only one save game at a time (it currently will parse all .craft files under /saves/)
+- Add option to load ~/KSP_Root/Textures_Reduced to override default texture sizes with low res assets when available
